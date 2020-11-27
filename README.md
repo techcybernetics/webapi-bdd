@@ -12,7 +12,7 @@ There is a single feature file with one scenario. The scenario has three steps, 
 
 Git:
 
-    git clone https://github.com/cucumber/cucumber-java-skeleton.git
+    git clone https://github.com/techcybernetics/bdd.git
     cd cucumber-java-skeleton
 
 Subversion:
