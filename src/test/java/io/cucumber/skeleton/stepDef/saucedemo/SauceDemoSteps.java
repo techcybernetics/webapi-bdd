@@ -62,7 +62,7 @@ public class SauceDemoSteps extends CommonHelper{
     @Then("the user is navigated to the login page")
     public void verifyUser() {
         String title= sauceDemoHomePage.getTitle();
-        Assert.assertEquals("Swag Lab",title);
+        Assert.assertEquals("Swag Labs",title);
 
     }
     @When("the user enter the login {string} and password {string}")
