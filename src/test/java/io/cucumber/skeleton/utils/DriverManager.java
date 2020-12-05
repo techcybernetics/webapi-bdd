@@ -24,7 +24,7 @@ public class DriverManager {
         if(browser.equalsIgnoreCase("ff")){
           // System.setProperty("webdriver.gecko.driver","src/driver/firefoxDriver/geckodriver.exe");
             FirefoxOptions options=new FirefoxOptions();
-            options.setHeadless(true);
+            options.setHeadless(false);
             driver=new FirefoxDriver(options);
         }
         else if(browser.equalsIgnoreCase("chrome")){

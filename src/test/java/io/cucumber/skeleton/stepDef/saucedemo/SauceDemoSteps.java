@@ -1,9 +1,6 @@
 package io.cucumber.skeleton.stepDef.saucedemo;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
-import io.cucumber.java.BeforeStep;
-import io.cucumber.java.Scenario;
+import io.cucumber.java.*;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -38,18 +35,31 @@ public class SauceDemoSteps extends CommonHelper{
     //after every scenario //Global Hooks
     @After
     public void tearDown(Scenario scenario){
+
         quitDriver(scenario);
     }
 
     @BeforeStep("@products") //Local hooks for the product scenario
-    public void setup1(){
-        System.out.println("This is my custom setup1");
+    public void emptyTableData() throws Exception{
+
+        System.out.println("This is my custom step to empty the table data");
+        String clearDb="UPDATE INVENTORY "+
+                "SET description=NULL";
+        dbUpdt(clearDb);
+        System.out.println("clean up completed.....");
+    }
+
+    @AfterStep("@products")
+    public void setupAfter(){
+
+        System.out.println("This is my custom after");
     }
 
     @Given("user is in the login page")
-    public void loginPage() {
-
-        driver= DriverManager.initDriver("chrome","https://www.saucedemo.com");
+    public void loginPage() throws Exception{
+        String url=CommonHelper.readProperties("src/test/resources/env.properties").getProperty("url.sauceLab");
+        String browser=CommonHelper.readProperties("src/test/resources/env.properties").getProperty("browser");
+        driver= DriverManager.initDriver(browser,url);
     }
 
     @When("the user enter the login and password")
@@ -71,8 +81,8 @@ public class SauceDemoSteps extends CommonHelper{
         sauceDemoHomePage= sauceDemoLoginPage.login(userName,password);
     }
 
-    @Then("the user validates the products available in the homepage")
-    public void products(DataTable dataTable) {
+    @Then("the user validates the products available in the homepage and updates the product description in the DB")
+    public void products(DataTable dataTable) throws Exception {
 
         //List of Maps
 
@@ -85,9 +95,16 @@ public class SauceDemoSteps extends CommonHelper{
 
             for(WebElement el:sauceDemoHomePage.getItems()){
 
-                if(el.getText().contains(list.get(i).get("products"))){
+                String productData=list.get(i).get("products");
+                String itemDesc=sauceDemoHomePage.getItemDescription(productData); // This is to get
+                                                                                    // the item desc by passing the product name as arg
+                if(el.getText().contains(productData)){
+
                     Assert.assertEquals(el.getText(),list.get(i).get("products"));
+                    String sqlUpdt="UPDATE INVENTORY SET description=" +"'"+itemDesc+"'"+" where products="+"'"+productData+"'";
+                    dbUpdt(sqlUpdt);
                     break;
+
                 }
 
             }

@@ -2,12 +2,6 @@
 Feature: To Test basic Sauce Demo validation
   Background:
     Given user is in the login page
-
-  Scenario: Check user is logged in to the website
-
-    When the user enter the login and password
-    Then the user is navigated to the login page
-
     @lab
     Scenario Outline: Check user login with multiple users
       When the user enter the login "<userName>" and password "<password>"
@@ -20,7 +14,7 @@ Feature: To Test basic Sauce Demo validation
       @products
       Scenario: Validate products
         When the user enter the login and password
-        Then the user validates the products available in the homepage
+        Then the user validates the products available in the homepage and updates the product description in the DB
         |products                         |
         |Sauce Labs Backpack              |
         |Sauce Labs Bike Light            |
