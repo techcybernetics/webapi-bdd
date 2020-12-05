@@ -97,10 +97,13 @@ public class SauceDemoSteps extends CommonHelper{
 
                 String productData=list.get(i).get("products");
                 String itemDesc=sauceDemoHomePage.getItemDescription(productData); // This is to get
-                                                                                    // the item desc by passing the product name as arg
+                System.out.println(itemDesc);                                                      // the item desc by passing the product name as arg
                 if(el.getText().contains(productData)){
 
                     Assert.assertEquals(el.getText(),list.get(i).get("products"));
+                    if(itemDesc.contains("'")){
+                        itemDesc= itemDesc.replace("'","");
+                    }
                     String sqlUpdt="UPDATE INVENTORY SET description=" +"'"+itemDesc+"'"+" where products="+"'"+productData+"'";
                     dbUpdt(sqlUpdt);
                     break;
