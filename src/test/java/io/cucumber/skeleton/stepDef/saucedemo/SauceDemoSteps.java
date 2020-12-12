@@ -41,17 +41,21 @@ public class SauceDemoSteps extends CommonHelper{
 
     @BeforeStep("@products") //Local hooks for the product scenario
     public void emptyTableData() throws Exception{
-
+        String dropDB="drop table inv_dummy";
+        dbUpdt(dropDB);
+        String copyDB="create table inv_dummy as select id, products,description from inventory";
+        dbUpdt(copyDB);
         System.out.println("This is my custom step to empty the table data");
-        String clearDb="UPDATE INVENTORY "+
-                "SET description=NULL";
-        dbUpdt(clearDb);
+//       // String clearDb="UPDATE INVENTORY "+
+//                "SET description=NULL";
+//        dbUpdt(clearDb);
         System.out.println("clean up completed.....");
     }
 
     @AfterStep("@products")
-    public void setupAfter(){
+    public void setupAfter() throws Exception{
 
+        System.out.println("clean up completed.....");
         System.out.println("This is my custom after");
     }
 
