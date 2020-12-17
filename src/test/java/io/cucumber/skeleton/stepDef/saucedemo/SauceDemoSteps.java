@@ -20,23 +20,26 @@ public class SauceDemoSteps extends CommonHelper{
     SauceDemoHomePage sauceDemoHomePage;
 
     //before every scenario //Global hooks
-    @Before(order=1)
-    public void setup(){
-        System.out.println("This is my setup");
-    }
-    @Before(order = 2)
-    public void setupG_1(){
-        System.out.println("This is my setup G1");
-    }
-    @Before (order = 3)
-    public void setupG_2(){
-        System.out.println("This is my setup G2");
-    }
+//    @Before(order=1)
+//    public void setup(){
+//        System.out.println("This is my setup");
+//    }
+//    @Before(order = 2)
+//    public void setupG_1(){
+//        System.out.println("This is my setup G1");
+//    }
+//    @Before (order = 3)
+//    public void setupG_2(){
+//        System.out.println("This is my setup G2");
+//    }
     //after every scenario //Global Hooks
     @After
     public void tearDown(Scenario scenario){
 
-        quitDriver(scenario);
+        if(driver!=null){
+            quitDriver(scenario);
+        }
+
     }
 
     @BeforeStep("@products") //Local hooks for the product scenario

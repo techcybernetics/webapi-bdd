@@ -1,6 +1,9 @@
 package io.cucumber.skeleton.utils;
 
 import io.cucumber.java.Scenario;
+import io.restassured.RestAssured;
+import io.restassured.config.SSLConfig;
+import io.restassured.specification.RequestSpecification;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -14,7 +17,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
-public class CommonHelper {
+public class CommonHelper extends RestAssured{
     public WebDriver driver=null;
     static final String JDBC_DRIVER="org.h2.Driver";
     static final String DB_URL="jdbc:h2:~/test";
@@ -99,4 +102,9 @@ public class CommonHelper {
         }
     }
 
+    public RequestSpecification httpClient(){
+        RestAssured.useRelaxedHTTPSValidation();
+        given().config(config().sslConfig(new SSLConfig().relaxedHTTPSValidation()));
+        return given();
+    }
 }
