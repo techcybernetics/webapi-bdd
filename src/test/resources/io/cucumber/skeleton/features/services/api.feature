@@ -1,3 +1,4 @@
+
 Feature: API Test
   Background:
     Given I setup the uri
@@ -55,6 +56,7 @@ Feature: API Test
       |id|
       |1 |
 
+
    Scenario Outline:  Check api response by path params
      Given I setup the url for path param
      When I call the get request by passing the param "<season>"
@@ -65,7 +67,20 @@ Feature: API Test
      |   2016   | MRData.CircuitTable.season     |2016|
      |   2016   | MRData.CircuitTable.Circuits[0].circuitId  |albert_park|
      |   2016   | MRData.CircuitTable.Circuits[0].Location.country   |Australia|
-  @api
+
+
+  Scenario Outline:  Validate circuit ID
+    Given I setup the url for path param
+    When I call the get request by passing the param "<season>"
+    Then I validate the response attribute "<responseAttribute>" by json path "<jsonPath>"
+
+    Examples:
+      |season    |responseAttribute   |jsonPath|
+      |   2016   |  albert_park, americas, bahrain, BAK|  MRData.CircuitTable.Circuits.circuitId         |
+      |   2016   |  catalunya |     MRData.CircuitTable.Circuits.circuitId        |
+      |   2016   |  interlagos|   MRData.CircuitTable.Circuits.circuitId       |
+      |   2016   |  Australia|   MRData.CircuitTable.Circuits.Location.country  |
+
   Scenario Outline: Check api response for query param
   Given I setup the url for query param
   When I call the get request by passing the query param "<url>"
@@ -77,3 +92,34 @@ Feature: API Test
       |softinnovas|
       |america|
       |world|
+
+    # we are testing 2 apis together --> the response of 1 api is the request for the other one
+
+
+
+  @api
+  Scenario Outline:  Validate country from circuit ID
+    Given I setup the url for path param
+    When I call the get request by passing the param "<season>"
+    # capture the circuit ID from the 1st response
+   And I capture the circuit ID from the response
+    #pass the circuit ID to the 2nd API as a path param
+    And I call the 2nd api with the circuit ID from the previous API response
+    #Then validate the country
+    Then I validate the country
+
+    Examples:
+      |season    |
+      |   2017  |
+
+
+
+
+
+
+
+
+
+
+
+

@@ -11,9 +11,11 @@ import org.json.simple.JSONObject;
 import org.junit.Assert;
 
 import java.io.IOException;
+import java.util.List;
 
 public class APISteps extends CommonHelper {
     Response response=null;
+    String circuitId=null;
     @Given("I setup the uri")
     public void i_setup_the_uri() throws IOException {
         // Write code here that turns the phrase above into concrete actions
@@ -150,6 +152,43 @@ public class APISteps extends CommonHelper {
     response.prettyPrint();
         System.out.println(response.getStatusLine());
         Assert.assertEquals(response.getStatusCode(),200);
+    }
+
+    @Then("I validate the response attribute {string} by json path {string}")
+    public void i_validate_the_response_attribute_by_json_path(String attributeValue, String jsonPath) {
+        // Write code here that turns the phrase above into concrete actions
+        List<String> circuitIDs=response.jsonPath().get(jsonPath);
+        if(attributeValue.contains(",")){
+            for(String value:attributeValue.split(",")){
+
+                Assert.assertTrue(circuitIDs.contains(value.trim()));
+                System.out.println(value);
+            }
+        }
+        else{
+            Assert.assertTrue(circuitIDs.contains(attributeValue));
+        }
+        }
+    @When("I capture the circuit ID from the response")
+    public void i_capture_the_circuit_id_from_the_response() {
+        // Write code here that turns the phrase above into concrete actions
+      circuitId= response.jsonPath().get("MRData.CircuitTable.Circuits[1].circuitId");
+    }
+    @When("I call the 2nd api with the circuit ID from the previous API response")
+    public void i_call_the_2nd_api_with_the_circuit_id_from_the_previous_api_response() {
+        // Write code here that turns the phrase above into concrete actions
+        response=httpClient().pathParam("circuitID",circuitId).request(Method.GET,"/circuits/{circuitID}.json");
+
+    }
+
+
+
+    @Then("I validate the country")
+    public void i_validate_the_country() {
+        // Write code here that turns the phrase above into concrete actions
+        String country=response.jsonPath().get("MRData.CircuitTable.Circuits[0].Location.country");
+        System.out.println("the country is :"+country);
+        Assert.assertEquals("USA",country);
     }
 
 }
