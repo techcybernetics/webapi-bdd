@@ -129,8 +129,8 @@
                         </goals>
                         <configuration>
                             <projectName>CucumberWebGui</projectName>
-                            <outputDirectory>${project.build.directory}/cucumber-report-html</outputDirectory>
-                            <cucumberOutput>${project.build.directory}/cucumber.json</cucumberOutput>
+                            <outputDirectory>${project.build.directory}/target/cucumber-report-html</outputDirectory>
+                            <cucumberOutput>${project.build.directory}/target/cucumber.json</cucumberOutput>
                         </configuration>
                     </execution>
                 </executions>
